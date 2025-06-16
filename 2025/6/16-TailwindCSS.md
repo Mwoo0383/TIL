@@ -12,3 +12,7 @@
 | `text-lg`   | 약간 큼     | 1.125rem | 18px |
 | `text-xl`   | 큼        | 1.25rem  | 20px |
 | `text-2xl`  | 더 큼      | 1.5rem   | 24px |
+
+### 🔍 ```mx-auto``` : 가로 가운데 정렬. margin-left와 margin-right를 자동으로 맞춤.
+
+### 🔍 ```px-4, py-4``` : px -> 좌우 패딩, py -> 상하 패딩
