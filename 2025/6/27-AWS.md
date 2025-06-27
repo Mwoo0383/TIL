@@ -1,10 +1,12 @@
 # AWS 기초 과정 실습
 
-## 📌 VPC(Virtual Private Cloud) 이해하기
+## 📌 네트워크 구성
+
+### 1. VPC(Virtual Private Cloud) 이해하기
 - VPC를 이용하면 사용자가 정의한 가상의 네트워크 공간 안에서 AWS 리소스를 시작할 수 있음
 - VPC는 AWS 클라우드의 격리된 부분. EC2 인스턴스와 같은 AWS 객체로 채워짐
 
-### 1. VPC 생성하기
+#### VPC 생성하기
 - **이름**
 : VPC-Lab
 - **IPv4 CIDR 블록**
@@ -49,3 +51,75 @@
 - 라우팅 테이블 ID에서 기본 라우팅 테이블이 아닌 다른 라우팅 테이블을 선택, 저장
 - public subnet C도 인터넷으로 향하는 경로가 생성되었는지 확인
 ![아키텍처 구성3](아키텍처-라우팅.png)
+
+### 4. 보안 그룹 생성하기
+
+#### 보안 그룹 생성
+- 보안 그룹은 인스턴스에 대한 인바운드 및 아웃바운드 트래픽을 제어하는 가상 방화벽 역할
+- 보안 그룹 -> 보안 그룹 생성
+- **보안 그룹 이름**
+: webserver-sg
+- **설명**
+: security group for web servers
+- **VPC**
+: (VPC-Lab) 선택
+- **인바운드 규칙**
+: SSH, HTTP -> 내 IP
+
+## 📌 웹 서버 생성하기
+- **EC2(Elastic Compute Cloud) 이해하기**
+: 하드웨어 선투자 없이 더 빠르게 앱 개발, 배포 가능. 원하는 만큼 가상 서버를 구축하고 보안 및 네트워크 구성과 스토리지 관리 가능.
+![아키텍처 구성4](아키텍처-EC2.png)
+
+### 1. 웹 서버 인스턴스 생성
+- 인스턴스 시작
+- **이름**
+: webserver 1
+- **Quick Start**
+: image > Amazon Linux 2 AMI (HVM) - Kernel 5.10, SSD Volume Type. 아키텍처 > 64비트(x86)
+- **인스턴스 유형**
+: t2.micro
+- **키 페어 생성**
+: 이름 > keypair-seoul, 유형 > RSA, 형식 > .pem >> 키 페어 생성
+- **네트워크 설정**
+: 편집 클릭 -> VPC-Lab, public subnet A, 퍼블릭 IP 자동 할당 활성화 -> 기존 보안그룹 선택, webserver-sg -> 스토리지 구성 8, gp2 -> 고급 세부 정보에 아래 코드 복붙 후 인스턴스 시작
+```
+#!/bin/sh
+        
+# Install a LAMP stack
+sudo amazon-linux-extras install -y lamp-mariadb10.2-php7.2 php7.2
+sudo yum -y install httpd php-mbstring
+sudo yum -y install git
+        
+# Start the web server
+sudo chkconfig httpd on
+sudo systemctl start httpd
+        
+# Install the web pages for our lab
+if [ ! -f /var/www/html/aws-boarding-pass-webapp.tar.gz ]; then
+    cd /var/www/html
+    wget -O 'techcamp-webapp-2024.zip' 'https://ws-assets-prod-iad-r-icn-ced060f0d38bc0b0.s3.ap-northeast-2.amazonaws.com/600420b7-5c4c-498f-9b80-bc7798963ba3/techcamp-webapp-2024.zip'
+    unzip techcamp-webapp-2024.zip
+    sudo mv techcamp-webapp-2024/* .
+    sudo rm -rf techcamp-webapp-2024
+    sudo rm -rf techcamp-webapp-2024.zip
+fi
+        
+# Install the AWS SDK for PHP
+if [ ! -f /var/www/html/aws.zip ]; then
+    cd /var/www/html
+    sudo mkdir vendor
+    cd vendor
+    sudo wget https://docs.aws.amazon.com/aws-sdk-php/v3/download/aws.zip
+    sudo unzip aws.zip
+fi
+        
+# Update existing packages
+sudo yum -y update
+```
+
+⭕️ 성공 시
+![EC2 시작](EC2-인스턴스시작.png)
+
+현재 아키텍처 상황
+![EC2 아키텍처](아키텍처-EC2시작.png)
