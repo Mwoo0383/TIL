@@ -186,3 +186,32 @@
 
 ---
 
+# 25-7-1 AWS 학습하며 배포하기 이어서 하기
+
+
+## 🐳 도커 설치하기
+- ```sudo apt-get install docker-ce docker-ce-cli containerd.io```
+
+> ```docker-ce``` : 도커 커뮤니티 에디션(메인 엔진)  
+```docker-ce-cli``` : 도커 명령어 도구  
+```containerd.io``` : 컨테이너 실행 백엔드 엔진
+
+## 도커 컴포즈 설치하기
+```sudo apt update```  
+```sudo apt install docker-compose -y```
+
+### 1. 도커 로그인하기
+- ```docker login -u "도커아이디"```
+- 이후 password는 도커허브 -> Account Settings -> Personal access tokens에서 토큰을 만든 후 사용
+- ```sudo usermod -aG docker $USER```  
+ 현재 사용자를 docker 그룹에 추가 -> 다시 로그인 하거나 ```newgrp docker``` 명령어로 그룹 적용
+
+### 2. 프로젝트 EC2에 복사하기
+- 프로젝트 루트로 이동
+- ```scp -i ~/.ssh/Room91.pem -r . ubuntu@3.39.127.143:/home/ubuntu/Room91```  
+ ```-r .```: 디렉토리 복사  
+ ‼️ 배포에 필요한 파일만 복사할 것 - 용량 문제
+
+### 3. 도커 이미지 생성 후 도커 컴포즈 실행
+- ```docker build -t housing-image .```: 이미지 생성  
+```docker-compose up -d```: 도커 컴포즈 데몬으로 실행
