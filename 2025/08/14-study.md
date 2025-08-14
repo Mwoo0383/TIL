@@ -1,6 +1,5 @@
 # 📌 Web 정리
 
----
 
 ## 1. Cookie vs Session
 
