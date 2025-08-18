@@ -461,3 +461,43 @@ Map<String, Integer> immutableMap2 = Collections.unmodifiableMap(originalMap);
 2. **적절한 구현체 선택**: 요구사항에 따라 HashMap, LinkedHashMap, TreeMap 중 선택
 3. **null 체크**: null 값이 들어올 수 있는 경우 적절한 처리 필요
 4. **동시성**: 멀티스레드 환경에서는 ConcurrentHashMap 사용 권장
+
+## 📌 Java Arrays 클래스 - 코딩테스트 핵심 요약
+
+```java
+import java.util.*;
+
+int[] arr = {5, 3, 8, 1, 2};
+
+// ✅ 출력
+System.out.println(Arrays.toString(arr));          // [5, 3, 8, 1, 2]
+System.out.println(Arrays.deepToString(new int[][]{{1,2},{3,4}})); // [[1, 2], [3, 4]]
+
+// ✅ 정렬
+Arrays.sort(arr);                                  // 오름차순
+Integer[] arrObj = {5,3,8,1,2};
+Arrays.sort(arrObj, Collections.reverseOrder());   // 내림차순
+
+// ✅ 복사
+int[] copy1 = Arrays.copyOf(arr, 7);               // 길이 7로 복사 (부족한 건 0)
+int[] copy2 = Arrays.copyOfRange(arr, 1, 4);       // [인덱스1 ~ 3] 복사
+
+// ✅ 채우기
+int[] fillArr = new int[5];
+Arrays.fill(fillArr, 7);                           // [7, 7, 7, 7, 7]
+Arrays.fill(fillArr, 1, 4, 9);                     // [7, 9, 9, 9, 7]
+
+// ✅ 검색 (정렬 필수)
+Arrays.sort(arr);
+int idx = Arrays.binarySearch(arr, 5);             // 값 5의 인덱스
+
+// ✅ 비교
+System.out.println(Arrays.equals(new int[]{1,2}, new int[]{1,2})); // true
+System.out.println(Arrays.deepEquals(new int[][]{{1}}, new int[][]{{1}})); // true
+
+// ✅ 스트림 활용
+int[] nums = {1,2,3,4,5};
+int sum  = Arrays.stream(nums).sum();              // 15
+double avg = Arrays.stream(nums).average().getAsDouble(); // 3.0
+int max  = Arrays.stream(nums).max().getAsInt();   // 5
+int min  = Arrays.stream(nums).min().getAsInt();   // 1
